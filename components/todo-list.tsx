@@ -1,8 +1,7 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
-import { useTausi } from "@tausi-auth/js/next/client";
 import { describeError } from "@/components/error-text";
-import { supabaseFor, type Todo } from "@/lib/supabase";
+import { supabase as getSupabase, type Todo } from "@/lib/supabase";
 
 /**
  * Talks to Supabase straight from the browser. There is no user_id filter in
@@ -10,8 +9,7 @@ import { supabaseFor, type Todo } from "@/lib/supabase";
  * user_id defaults to the JWT's sub on insert.
  */
 export function TodoList() {
-  const tausi = useTausi();
-  const supabase = supabaseFor(tausi);
+  const supabase = getSupabase();
   const [todos, setTodos] = useState<Todo[] | null>(null);
   const [title, setTitle] = useState("");
   const [error, setError] = useState<string | null>(null);

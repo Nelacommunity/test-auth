@@ -30,15 +30,15 @@ In the Tausi dashboard, create a project (or use one) and set:
 
 ```sh
 cp .env.example .env.local     # fill in the Tausi and Supabase values
-cd .. && ./setup.sh todo       # packs @tausi-auth/js from ../imara/sdks and installs
-cd todo-supabase && npm run dev   # http://localhost:3002
+npm install
+npm run dev                    # http://localhost:3002
 ```
 
-`getJwt()` is new in `@tausi-auth/js` (not in 0.2.0 on npm yet), which is why the setup installs the SDK from the local repo.
+Everything installs from npm, so it deploys as is (Vercel: set the root directory to `todo-supabase` and add the same environment variables).
 
 ## How it works
 
-- `lib/supabase.ts`: `createClient(url, anonKey, { accessToken: () => tausi.getJwt({ template: "supabase" }) })`. The token lasts an hour and is reused until 30 s before it expires.
+- `lib/supabase.ts`: `createClient(url, anonKey, { accessToken })`, where `accessToken` asks this app's Tausi proxy for a JWT from the `supabase` template (`POST /api/tausi/auth/token`). The token lasts an hour and is reused until 30 s before it expires. With `@tausi-auth/js` 0.3+ this is one line: `accessToken: () => tausi.getJwt({ template: "supabase" })`.
 - `components/todo-list.tsx`: plain supabase-js queries with **no user filter**. RLS returns only your rows, and `user_id` defaults to the token's `sub` on insert.
 - `app/todos/page.tsx`: server component; `tausi.requireAuth()` verifies the session with Tausi and redirects to `/sign-in` otherwise. `proxy.ts` does a fast cookie check first.
 
