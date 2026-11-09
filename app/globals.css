@@ -54,3 +54,8 @@ button.icon { font-size: 1.3rem; line-height: 1; }
 .todos li.done span { text-decoration: line-through; color: var(--muted); }
 .todo-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; }
 .empty { text-align: center; padding: 24px 0; }
+
+/* Email / Phone switch on sign-in and sign-up */
+.tabs { display: flex; gap: 4px; padding: 4px; margin-bottom: 16px; border-radius: 12px; background: var(--border); }
+.tabs .tab { flex: 1; padding: 8px 10px; background: transparent; color: var(--muted); font-weight: 600; border-radius: 9px; }
+.tabs .tab.active { background: var(--card); color: var(--text); box-shadow: 0 1px 3px rgb(0 0 0 / 0.12); }

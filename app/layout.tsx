@@ -18,7 +18,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               {user ? (
                 <>
                   <Link href="/todos">My todos</Link>
-                  <span className="muted">{user.email}</span>
+                  <span className="muted">{user.email || user.phoneNumber}</span>
                   <SignOutButton />
                 </>
               ) : (

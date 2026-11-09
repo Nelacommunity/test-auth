@@ -20,6 +20,14 @@ In the Tausi dashboard, create a project (or use one) and set:
 - **Connectors → Templates → Supabase**: save the preset as is (name `supabase`, audience `authenticated`, claim `role: authenticated`).
 - Copy the **issuer URL** from Connectors, and the **publishable** and **secret** keys from API keys.
 
+### Phone sign-in (optional)
+
+To let people sign up with a phone number instead of an email:
+
+- **Sign-in methods → Phone number and password**: turn it on. The Tausi server needs `WASEND_API` (WaSend) to send the WhatsApp codes.
+- Sign-up and sign-in then show an **Email / Phone** switch. A phone sign-up sends a 6-digit code on WhatsApp; entering it creates the account and signs in. Later sign-ins use the number and password (no WhatsApp).
+- Phone-only users have no email (`user.email` is `""`), so the header shows their number. Their todos work the same: Supabase only looks at `sub`.
+
 ## 2. Supabase project
 
 1. **Authentication → Sign In / Providers → Third-party auth → Add provider → OpenID Connect**: paste the Tausi issuer URL.
@@ -40,6 +48,7 @@ Everything installs from npm, so it deploys as is (Vercel: set the root director
 
 - `lib/supabase.ts`: `createClient(url, anonKey, { accessToken })`, where `accessToken` asks this app's Tausi proxy for a JWT from the `supabase` template (`POST /api/tausi/auth/token`). The token lasts an hour and is reused until 30 s before it expires. With `@tausi-auth/js` 0.3+ this is one line: `accessToken: () => tausi.getJwt({ template: "supabase" })`.
 - `components/todo-list.tsx`: plain supabase-js queries with **no user filter**. RLS returns only your rows, and `user_id` defaults to the token's `sub` on insert.
+- `app/sign-up/page.tsx` / `app/sign-in/page.tsx`: `tausi.signUpWithPhone()` → `tausi.verifyPhone()` and `tausi.signInWithPhone()` for phone accounts (`@tausi-auth/js` 0.3+), shown when `getProviders()` lists `phone`.
 - `app/todos/page.tsx`: server component; `tausi.requireAuth()` verifies the session with Tausi and redirects to `/sign-in` otherwise. `proxy.ts` does a fast cookie check first.
 
 ## Try it
