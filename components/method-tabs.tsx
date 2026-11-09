@@ -10,8 +10,7 @@ export function usePhoneEnabled(): boolean {
   const [enabled, setEnabled] = useState(false);
   useEffect(() => {
     tausi.getProviders().then(
-      // Compared as a string: the SignInMethod type lists "phone" from @tausi-auth/js 0.3.1.
-      (providers) => setEnabled(providers.some((p) => (p.id as string) === "phone")),
+      (providers) => setEnabled(providers.some((p) => p.id === "phone")),
       () => setEnabled(false),
     );
   }, [tausi]);

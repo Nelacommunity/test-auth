@@ -48,7 +48,7 @@ Everything installs from npm, so it deploys as is (Vercel: set the root director
 
 - `lib/supabase.ts`: `createClient(url, anonKey, { accessToken })`, where `accessToken` asks this app's Tausi proxy for a JWT from the `supabase` template (`POST /api/tausi/auth/token`). The token lasts an hour and is reused until 30 s before it expires. With `@tausi-auth/js` 0.3+ this is one line: `accessToken: () => tausi.getJwt({ template: "supabase" })`.
 - `components/todo-list.tsx`: plain supabase-js queries with **no user filter**. RLS returns only your rows, and `user_id` defaults to the token's `sub` on insert.
-- `app/sign-up/page.tsx` / `app/sign-in/page.tsx`: `tausi.signUpWithPhone()` → `tausi.verifyPhone()` and `tausi.signInWithPhone()` for phone accounts (`@tausi-auth/js` 0.3+), shown when `getProviders()` lists `phone`.
+- `app/sign-up/page.tsx` / `app/sign-in/page.tsx`: `tausi.signUpWithPhone()` → `tausi.verifyPhone()` and `tausi.signInWithPhone()` for phone accounts (`@tausi-auth/js` 0.3.1+), shown when `getProviders()` lists `phone`.
 - `app/todos/page.tsx`: server component; `tausi.requireAuth()` verifies the session with Tausi and redirects to `/sign-in` otherwise. `proxy.ts` does a fast cookie check first.
 
 ## Try it
